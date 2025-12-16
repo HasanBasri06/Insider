@@ -14,11 +14,11 @@ return new class extends Migration
     {
         Schema::create('messages', function (Blueprint $table) {
             $table->id();
-            $table->string('message_id');
+            $table->string('message_id')->nullable();
             $table->text('content');
             $table->string('phone_number', '20');
-            $table->timestamp('sent_at');
-            $table->text('error_message');
+            $table->timestamp('sent_at')->nullable();
+            $table->text('error_message')->nullable();
             $table->enum('status', array_values(StatusEnum::cases()));
             $table->timestamps();
         });
