@@ -7,29 +7,31 @@ use App\Repositories\MessageRepositoryInterface;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Redis;
 
 class MessageService {
+    private string $webhookUrl;
+    private const MAX_LENGTH = 160;
     /**
      * @param MessageRepositoryInterface $messageRepository
      */
     public function __construct(
         private MessageRepositoryInterface $messageRepository
     ) {
-        $this->messageRepository = $messageRepository;
+        $this->webhookUrl = config('services.webhook.url');
     }
     /**
      * @param Message $message
-     * @throws Exception
      * @return void
      */
     public function sendMessage(Message $message): void {
-        if (mb_strlen($message->content) > 160) {
+        if (mb_strlen($message->content) > self::MAX_LENGTH) {
             $this->writeError($message->id, "Character limit exceeded");
             return;
         }
 
         try {
-            $response = Http::post(config('services.webhook.url'), [
+            $response = Http::post($this->webhookUrl, [
                 'to' => $message->user->phone_number,
                 'content' => $message->content
             ]);
@@ -47,16 +49,26 @@ class MessageService {
                     $messageId,
                     $sentAt
                 );
+
         } catch (\Throwable $th) {
             $this->writeError($message->id, $th->getMessage());
         }
     }
-    public function getMessageById(int $id): Message {
+    /**
+     * @param int $id
+     * @return ?Message
+     */
+    public function getMessageById(int $id): ?Message {
         return $this
             ->messageRepository
             ->findByIdWithUser($id);
     }
-    public function writeError(int $messageId, string $message) {
+    /**
+     * @param int $messageId
+     * @param string $message
+     * @return void
+     */
+    public function writeError(int $messageId, string $message): void {
         $this->messageRepository
             ->markAsFailed($messageId, $message);
     }

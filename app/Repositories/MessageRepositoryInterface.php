@@ -30,7 +30,7 @@ interface MessageRepositoryInterface {
     public function getSentMessages(): Collection;
     /**
      * @param int $id
-     * @return Message
+     * @return void
      */
-    public function findByIdWithUser(int $id): Message;
+    public function findByIdWithUser(int $id): ?Message;
 }

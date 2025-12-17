@@ -66,7 +66,11 @@ class MessageRepository implements MessageRepositoryInterface {
             ->get();
             
     }
-    public function findByIdWithUser(int $id): Message
+    /**
+     * @param int $id
+     * @return Message|\Illuminate\Database\Eloquent\Builder<Message>
+     */
+    public function findByIdWithUser(int $id): ?Message
     {
         return $this
             ->message
