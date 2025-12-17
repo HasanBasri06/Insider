@@ -66,10 +66,11 @@ class MessageRepository implements MessageRepositoryInterface {
             ->get();
             
     }
-    public function findById(int $id): Message
+    public function findByIdWithUser(int $id): Message
     {
         return $this
             ->message
+            ->with('user')
             ->find($id);
     }
 }

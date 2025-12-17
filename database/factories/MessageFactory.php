@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Enums\StatusEnum;
 use App\Models\Message;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Attributes\UseFactory;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -22,8 +23,8 @@ class MessageFactory extends Factory
     {
         return [
             'content' => fake()->sentence(4),
-            'phone_number' => fake()->phoneNumber(),
-            'status' => StatusEnum::PENDING->value
+            'status' => StatusEnum::PENDING->value,
+            'user_id' => User::factory()
         ];
     }
 }

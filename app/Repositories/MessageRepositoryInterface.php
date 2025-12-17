@@ -32,5 +32,5 @@ interface MessageRepositoryInterface {
      * @param int $id
      * @return Message
      */
-    public function findById(int $id): Message;
+    public function findByIdWithUser(int $id): Message;
 }

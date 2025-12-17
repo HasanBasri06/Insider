@@ -30,7 +30,7 @@ class MessageService {
 
         try {
             $response = Http::post(config('services.webhook.url'), [
-                'to' => $message->phone_number,
+                'to' => $message->user->phone_number,
                 'content' => $message->content
             ]);
 
@@ -54,7 +54,7 @@ class MessageService {
     public function getMessageById(int $id): Message {
         return $this
             ->messageRepository
-            ->findById($id);
+            ->findByIdWithUser($id);
     }
     public function writeError(int $messageId, string $message) {
         $this->messageRepository
