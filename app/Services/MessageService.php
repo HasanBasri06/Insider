@@ -7,7 +7,6 @@ use App\Repositories\MessageRepositoryInterface;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Redis;
 
 class MessageService {
     private string $webhookUrl;
