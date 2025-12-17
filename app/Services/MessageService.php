@@ -23,13 +23,14 @@ class MessageService {
      * @return void
      */
     public function sendMessage(Message $message): void {
-        if (strlen($message) > 160) {
-            throw new Exception("Character limit exceeded");
+        if (mb_strlen($message->content) > 160) {
+            $this->writeError($message->id, "Character limit exceeded");
+            return;
         }
 
         try {
             $response = Http::post(config('services.webhook.url'), [
-                'phone' => $message->phone_number,
+                'to' => $message->phone_number,
                 'content' => $message->content
             ]);
 
@@ -38,7 +39,7 @@ class MessageService {
             } 
 
             $messageId = $response->json('messageId');
-                $sentAt = Carbon::now()->toDateTimeString();
+            $sentAt = Carbon::now()->toDateTimeString();
 
             $this->messageRepository
                 ->markAsSent(
@@ -47,8 +48,16 @@ class MessageService {
                     $sentAt
                 );
         } catch (\Throwable $th) {
-            $this->messageRepository
-                ->markAsFailed($message->id, $th->getMessage());
+            $this->writeError($message->id, $th->getMessage());
         }
+    }
+    public function getMessageById(int $id): Message {
+        return $this
+            ->messageRepository
+            ->findById($id);
+    }
+    public function writeError(int $messageId, string $message) {
+        $this->messageRepository
+            ->markAsFailed($messageId, $message);
     }
 }

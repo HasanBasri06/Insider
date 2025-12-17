@@ -22,6 +22,7 @@ class MessageRepository implements MessageRepositoryInterface {
     public function getPendingMessages(int $limit): Collection
     {
         return $this->message
+            ->where('status', StatusEnum::PENDING->value)
             ->orderBy('id')
             ->limit($limit)
             ->get();
@@ -64,5 +65,11 @@ class MessageRepository implements MessageRepositoryInterface {
             ->orderByDesc('sent_at')
             ->get();
             
+    }
+    public function findById(int $id): Message
+    {
+        return $this
+            ->message
+            ->find($id);
     }
 }

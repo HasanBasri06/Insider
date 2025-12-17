@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Models\Message;
 use Illuminate\Support\Collection;
 
 interface MessageRepositoryInterface {
@@ -27,4 +28,9 @@ interface MessageRepositoryInterface {
      * @return void
      */
     public function getSentMessages(): Collection;
+    /**
+     * @param int $id
+     * @return Message
+     */
+    public function findById(int $id): Message;
 }
