@@ -19,9 +19,9 @@ class MessageRepository implements MessageRepositoryInterface {
     /**
      * @param int $limit
      * @param string $filter
-     * @return \Illuminate\Database\Eloquent\Collection<int, Message>
+     * @return Collection
      */
-    public function getAllMessages(int $limit, string $filter): Collection
+    public function getAllMessages(int $limit, string|null $filter): ?Collection
     {
         return $this->message
             ->with('user')

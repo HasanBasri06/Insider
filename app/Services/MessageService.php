@@ -75,9 +75,9 @@ class MessageService {
     /**
      * @param int $limit
      * @param string $filter
-     * @return \Illuminate\Support\Collection
+     * @return ?Collection
      */
-    public function getAllMessagesWithUser(int $limit, string $filter): Collection {
+    public function getAllMessagesWithUser(int $limit, string|null $filter): ?Collection {
         return $this->messageRepository
             ->getAllMessages($limit, $filter);
     }
