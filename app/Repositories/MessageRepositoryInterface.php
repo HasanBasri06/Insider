@@ -8,9 +8,15 @@ use Illuminate\Support\Collection;
 interface MessageRepositoryInterface {
     /**
      * @param int $limit
-     * @return Collection
+     * @param string $filter
+     * @return void
      */
-    public function getPendingMessages(int $limit): Collection;
+    public function getAllMessages(int $limit, string $filter): Collection;
+    /**
+     * @param int $limit
+     * @return ?Message
+     */
+    public function getMessageById(int $limit): ?Message;
     /**
      * @param int $id
      * @param string $messageId

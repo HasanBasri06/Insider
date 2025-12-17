@@ -6,6 +6,7 @@ use App\Models\Message;
 use App\Repositories\MessageRepositoryInterface;
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Http;
 
 class MessageService {
@@ -70,5 +71,22 @@ class MessageService {
     public function writeError(int $messageId, string $message): void {
         $this->messageRepository
             ->markAsFailed($messageId, $message);
+    }
+    /**
+     * @param int $limit
+     * @param string $filter
+     * @return \Illuminate\Support\Collection
+     */
+    public function getAllMessagesWithUser(int $limit, string $filter): Collection {
+        return $this->messageRepository
+            ->getAllMessages($limit, $filter);
+    }
+    /**
+     * @param int $limit
+     * @return Message|null
+     */
+    public function getMessageByIdWithUser(int $limit): ?Message {
+        return $this->messageRepository
+            ->getMessageById($limit);
     }
 }

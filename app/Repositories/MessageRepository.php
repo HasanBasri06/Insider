@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Enums\StatusEnum;
 use App\Models\Message;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 
 class MessageRepository implements MessageRepositoryInterface {
@@ -17,15 +18,30 @@ class MessageRepository implements MessageRepositoryInterface {
     }
     /**
      * @param int $limit
-     * @return Collection
+     * @param string $filter
+     * @return \Illuminate\Database\Eloquent\Collection<int, Message>
      */
-    public function getPendingMessages(int $limit): Collection
+    public function getAllMessages(int $limit, string $filter): Collection
     {
         return $this->message
-            ->where('status', StatusEnum::PENDING->value)
+            ->with('user')
+            ->when($filter, function (Builder $query) use ($filter) {
+                $query->where('status', $filter);
+            })
             ->orderBy('id')
             ->limit($limit)
             ->get();
+    }
+    /**
+     * @param int $id
+     * @return ?Message
+     */
+    public function getMessageById(int $id): ?Message 
+    {
+        return $this->message
+            ->with('user')
+            ->where('id', $id)
+            ->first();
     }
     /**
      * @param int $id
