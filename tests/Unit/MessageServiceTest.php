@@ -2,7 +2,6 @@
 
 namespace Tests\Unit;
 
-use App\Enums\StatusEnum;
 use App\Models\Message;
 use App\Repositories\MessageRepositoryInterface;
 use App\Services\MessageService;
@@ -13,6 +12,7 @@ use Tests\TestCase;
 class MessageServiceTest extends TestCase
 {
     protected $messageRepository;
+
     protected $service;
 
     protected function setUp(): void

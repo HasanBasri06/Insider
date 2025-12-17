@@ -19,7 +19,7 @@ class MessageResource extends JsonResource
             'message_id' => $this->message_id,
             'content' => $this->content,
             'status' => $this->status,
-            'user' => new UserResource($this->user)
+            'user' => new UserResource($this->user),
         ];
     }
 }

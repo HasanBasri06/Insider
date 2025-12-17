@@ -2,8 +2,10 @@
 ## Genel Bakış
 
 Bu proje, her 5 saniyede 2 mesaj gönderen ve mesaj durumlarını API üzerinden görüntüleyebilen bir Laravel 12 uygulamasıdır.
-Mesaj durumu takibi için enum yapısı, performans için Redis cache kullanılmıştır.
-Repository Pattern ve Service Layer yapılarıyla okunabilir ve sürdürülebilir bir kod tabanı hedeflenmiştir.
+Mesaj durumu takibi için enum yapısı kullandım.
+Repository Pattern ve Service Layer yapılarıyla okunabilir ve sürdürülebilir bir kod tabanı hedefledim.
+
+Kodları PSR-12 standartlarına uygun hale getirmek için Laravel’in Pint paketini kullandım. Insider için bu standartların önemli olduğunu bildiğimden, Pint’i tercih ettim.
 
 #### Teknolojiler
 
@@ -19,13 +21,49 @@ Repository Pattern ve Service Layer yapılarıyla okunabilir ve sürdürülebili
 
 * Service Layer
 
-* Ön Gereksinimler
+* Docker
 
-* Docker Engine
+* PSR12
 
-* Docker Compose
+Normal kullanımda PHPDoc satırlarıda kullanırım. Aşağıdaki kod örneğinde olduğu gibi:
+```php
+/**
+ * @param int $id // burada olduğu gibi
+ * @return ?Message
+ */
+public function getMessageById(int $id): ?Message
+{
+    return $this
+        ->messageRepository
+        ->findByIdWithUser($id);
+}
+```
+* Yaptığım araştırmalar sonucunda, scope içerisinde type-safe kullanılıyorsa, PSR-12 standartlarına göre @param etiketinin gereksiz olduğu sonucuna vardım ve bu gereksiz açıklamaları Pint aracıyla kaldırdım.
 
-(Opsiyonel) Windows/Mac için Docker Desktop
+* Ayrıca, kodlarımda tekrar kullanılabilirliği artırmak amacıyla çeşitli yapılar oluşturdum. Örneğin; API çıktılarında oluşabilecek hata durumlarında, client’a hata mesajı döndürme işlemini her seferinde tekrarlamak yerine, bu işlemi ResponseTrait.php içerisinde merkezi bir şekilde topladım.
+
+```php 
+trait ResponseTrait
+{
+    /**
+     * @return \Illuminate\Http\Response
+     */
+    public function error(string $message, int $code = 400): Response
+    {
+        return response([
+            'message' => $message,
+            'code' => $code,
+        ], $code);
+    }
+}
+```
+Bu sayede tek bir standartımız olmuş oldu.
+
+* Veriyi client tarafında tutarlı ve düzenli şekilde sunabilmek amacıyla Laravel’in API Resources yapısını kullandım. Bu sayede API çıktılarının standartlaşmasını ve okunabilirliğini sağladım.
+<br />
+
+* Projeyi GitHub’da oluşturduğum ilk andan itibaren, her değişikliği düzenli commit mesajlarıyla belgeleyerek çalışma disiplinimi sürdürdüm.
+
 
 #### Kurulum ve Çalıştırma
 
@@ -65,7 +103,7 @@ Docker Compose ile Servisleri Başlatın
 docker-compose up -d --build
 ```
 
-Öncelikle Laravel uygulamamızın içine girelim.
+Ardından Laravel uygulamamızın içine girelim.
 
 ```bash 
 docker-compose exec -it [container_id] bash

@@ -7,7 +7,6 @@ use App\Jobs\MessageSendJob;
 use App\Models\Message;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Queue;
 use Tests\TestCase;
@@ -15,6 +14,7 @@ use Tests\TestCase;
 class SendMessageJobTest extends TestCase
 {
     use RefreshDatabase;
+
     public function test_job_is_dispatched()
     {
         Queue::fake();

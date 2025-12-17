@@ -2,7 +2,6 @@
 
 namespace App\Jobs;
 
-use App\Models\Message;
 use App\Services\MessageService;
 use Exception;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -13,9 +12,6 @@ class MessageSendJob implements ShouldQueue
 {
     use Queueable;
 
-    /**
-     * @param int $messageId
-     */
     public function __construct(public int $messageId)
     {
         $this->messageId = $messageId;
@@ -24,7 +20,7 @@ class MessageSendJob implements ShouldQueue
     public function handle(MessageService $messageService): void
     {
         $message = $messageService->getMessageById($this->messageId);
-        if (!$message) {
+        if (! $message) {
             throw new Exception(
                 "Message not found. ID: {$this->messageId}"
             );

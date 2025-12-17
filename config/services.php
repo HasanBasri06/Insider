@@ -36,7 +36,7 @@ return [
     ],
 
     'webhook' => [
-        'url' => env('WEBHOOK_URL')
-    ]
+        'url' => env('WEBHOOK_URL'),
+    ],
 
 ];
