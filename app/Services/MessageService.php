@@ -6,7 +6,7 @@ use App\Models\Message;
 use App\Repositories\MessageRepositoryInterface;
 use Carbon\Carbon;
 use Exception;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
 
 class MessageService {
@@ -74,10 +74,10 @@ class MessageService {
     }
     /**
      * @param int $limit
-     * @param string $filter
-     * @return ?Collection
+     * @param string|null $filter
+     * @return Collection|null
      */
-    public function getAllMessagesWithUser(int $limit, string|null $filter): ?Collection {
+    public function getAllMessagesWithUser(int $limit, string|null $filter): Collection|null {
         return $this->messageRepository
             ->getAllMessages($limit, $filter);
     }
